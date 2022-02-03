@@ -5,5 +5,11 @@ package ru.hse.cli
  */
 object Environment {
 
+    val vars: HashMap<String, String> = hashMapOf()
+
     var isShutdowned: Boolean = false
+
+    fun put(variable: String, value: String) {
+        vars[variable] = value
+    }
 }

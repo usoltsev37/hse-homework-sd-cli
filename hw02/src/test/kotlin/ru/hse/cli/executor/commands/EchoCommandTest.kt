@@ -1,8 +1,8 @@
-package ru.hse.cli.executor
+package ru.hse.cli.executor.commands
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import ru.hse.cli.executor.commands.EchoCommand
+import ru.hse.cli.executor.IOEnvironment
 import java.io.ByteArrayOutputStream
 import java.util.*
 
