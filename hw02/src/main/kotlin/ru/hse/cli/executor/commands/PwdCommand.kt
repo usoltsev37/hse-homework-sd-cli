@@ -1,9 +1,11 @@
-package ru.hse.cli.executor
+package ru.hse.cli.executor.commands
+
+import ru.hse.cli.executor.IOEnvironment
 
 /**
  * Represents the command [pwd] which prints the contents of a file.
  */
-class PwdCommand: AbstractCommand() {
+class PwdCommand: AbstractCommand {
     /**
      * Execute [pwd] command with arguments and IO environment [ioEnvironment].
      * @param args should be ignored.

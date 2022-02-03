@@ -1,12 +1,13 @@
-package ru.hse.cli.executor
+package ru.hse.cli.executor.commands
 
+import ru.hse.cli.executor.IOEnvironment
 import java.io.File
 import java.io.FileNotFoundException
 
 /**
  * Represents the command [cat] which returns the contents of a file.
  */
-class CatCommand : AbstractCommand() {
+class CatCommand : AbstractCommand {
 
     private fun getData(fileName: String): ByteArray {
         return File(fileName).readBytes()

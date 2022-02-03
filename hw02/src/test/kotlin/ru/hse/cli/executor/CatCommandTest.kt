@@ -3,6 +3,7 @@ package ru.hse.cli.executor
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import ru.hse.cli.executor.commands.CatCommand
 import java.io.ByteArrayOutputStream
 import java.nio.file.Path
 import kotlin.io.path.pathString

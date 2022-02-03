@@ -2,6 +2,7 @@ package ru.hse.cli.executor
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import ru.hse.cli.executor.commands.EchoCommand
 import java.io.ByteArrayOutputStream
 import java.util.*
 

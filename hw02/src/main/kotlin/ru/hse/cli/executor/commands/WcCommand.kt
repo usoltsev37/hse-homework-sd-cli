@@ -1,5 +1,6 @@
-package ru.hse.cli.executor
+package ru.hse.cli.executor.commands
 
+import ru.hse.cli.executor.IOEnvironment
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -10,7 +11,7 @@ import java.util.UUID
  * then creates a temporary file, writes to outputStream
  * the number of lines, words and bytes of the file
  */
-class WcCommand : AbstactCommand {
+class WcCommand : AbstractCommand {
     /**
      * For every argument try to open file,
      * if argument is not a filename, create a temporary file and write argument in it
@@ -19,7 +20,7 @@ class WcCommand : AbstactCommand {
      * @return 0 if fail
      * @return 2 if file not found or can
      */
-    override fun execute(args: List<String>, io: IOEnvironment): Int {
+    override fun execute(args: List<String>, ioEnvironment: IOEnvironment): Int {
         for (arg in args) {
             var file = File(arg)
             if (!file.exists()) {
@@ -36,9 +37,9 @@ class WcCommand : AbstactCommand {
             val cntBytes = file.length()
 
             try {
-                io.outputStream.write(write4BytesToBuffer(cntLines))
-                io.outputStream.write(write4BytesToBuffer(cntWords))
-                io.outputStream.write(write8BytesToBuffer(cntBytes))
+                ioEnvironment.outputStream.write(write4BytesToBuffer(cntLines))
+                ioEnvironment.outputStream.write(write4BytesToBuffer(cntWords))
+                ioEnvironment.outputStream.write(write8BytesToBuffer(cntBytes))
             } catch (e: IOException) {
                 return 0
             }

@@ -5,14 +5,14 @@ import java.io.OutputStream
 /**
  * Stores streams for an interaction between a command and IO.
  */
-data class IOEnvironment(
+class IOEnvironment constructor(val outputStream: OutputStream, val errorStream: OutputStream) {
 
-    /**
-     * Stream stores output of a command execution.
-     */
-    val outputStream: OutputStream,
-    /**
-     * Stream stores error of a command execution.
-     */
-    val errorStream: OutputStream
-)
+    fun printState() {
+        if (errorStream.toString().isEmpty()) {
+            println(outputStream.toString())
+        } else {
+            println("Error: ")
+            println(errorStream.toString())
+        }
+    }
+}
