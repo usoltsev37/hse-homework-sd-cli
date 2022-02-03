@@ -26,6 +26,23 @@ class ParserImpl(input: String): Parser {
     }
 
     private fun parseCommand(): Command {
+        val oldPos = lexer.pos
+        val oldLastPos = lastPos
+        val lastCurToken = curToken
+
+        val res = parseAssignment()
+        if (res != null) {
+            return res
+        }
+
+        lastPos = oldLastPos
+        lexer.pos = oldPos
+        curToken = lastCurToken
+
+        return parseCommandWithArgs()
+    }
+
+    private fun parseCommandWithArgs(): Command {
         val name = parseString()
         if (lexer.isExhausted()) {
             return Command(name)
@@ -33,6 +50,19 @@ class ParserImpl(input: String): Parser {
         check(accept(Token.TK_SPACE)) { errorMessage }
         val args = parseArgs()
         return Command(name, args)
+    }
+
+    private fun parseAssignment(): Command? {
+        val varName = getLastTokenString()
+        if (accept(Token.TK_STR)) {
+            accept(Token.TK_SPACE)
+            if (accept(Token.TK_ASSIGN)) {
+                accept(Token.TK_SPACE)
+                val value = parseString()
+                return Command("assignment", listOf(varName, value))
+            }
+        }
+        return null
     }
 
     private fun parseArgs(): List<String> {

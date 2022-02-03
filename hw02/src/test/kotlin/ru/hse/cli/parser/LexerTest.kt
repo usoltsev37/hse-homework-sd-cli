@@ -19,6 +19,9 @@ class LexerTest {
     @Test
     fun testLongSpaces() = doTest("wc       ' w  w'   ", Token.TK_STR, Token.TK_SPACE, Token.TK_STR_IN2, Token.TK_SPACE)
 
+    @Test
+    fun testAssignment() = doTest("a=b", Token.TK_STR, Token.TK_ASSIGN, Token.TK_STR)
+
     private fun doTest(input: String, vararg expectedTokens: Token) {
         val lexer = LexerImpl(input)
         val tokens = ArrayList<Token>()
