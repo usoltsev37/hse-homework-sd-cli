@@ -1,10 +1,14 @@
 package ru.hse.cli
 
-/**
- * Static storage that stores the flag whether the CLI is shutdowned.
- */
 object Environment {
 
+    /**
+     * Stores variables with its values
+     */
     val vars: HashMap<String, String> = HashMap()
+
+    /**
+     * Is CLI shutdowned i.e exit command was executed
+     */
     var isShutdowned: Boolean = false
 }
