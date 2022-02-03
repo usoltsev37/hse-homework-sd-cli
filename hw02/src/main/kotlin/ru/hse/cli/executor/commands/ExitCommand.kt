@@ -10,16 +10,16 @@ import java.io.IOException
 class ExitCommand : AbstractCommand {
     /**
      * Set isShutdowned in Environment in true and clear io.outputStream
-     * @return 1 if success
-     * @return 0 if fail
+     * @return 0 if success
+     * @return 1 if fail
      */
     override fun execute(args: List<String>, ioEnvironment: IOEnvironment): Int {
         Environment.isShutdowned = true
         try {
             ioEnvironment.outputStream.flush()
         } catch (e: IOException) {
-            return 0
+            return 1
         }
-        return 1
+        return 0
     }
 }
