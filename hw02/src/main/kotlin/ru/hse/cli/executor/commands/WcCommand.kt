@@ -4,10 +4,10 @@ import ru.hse.cli.executor.IOEnvironment
 import java.io.File
 import java.io.IOException
 import java.util.*
-import java.util.UUID
+import kotlin.io.path.createTempFile
 
 /**
- * The command that tries to find a file from inputStream, if it does not find,
+ * The command that tries to find a file from args: List<String>, if it does not find,
  * then creates a temporary file, writes to outputStream
  * the number of lines, words and bytes of the file
  */
@@ -16,36 +16,38 @@ class WcCommand : AbstractCommand {
      * For every argument try to open file,
      * if argument is not a filename, create a temporary file and write argument in it
      * writes to outputStream the number of lines, words and bytes of the file
-     * @return 1 if success
-     * @return 0 if fail
+     * @return 0 if success
+     * @return 1 if fail
      * @return 2 if file not found or can
      */
     override fun execute(args: List<String>, ioEnvironment: IOEnvironment): Int {
         for (arg in args) {
             var file = File(arg)
             if (!file.exists()) {
-                file = File(UUID.randomUUID().toString())
-                if (!file.createNewFile()) {
-                    // файл не создался
-                    return 2
-                }
+                file = createTempFile().toFile()
                 file.writeText(arg)
             }
 
             val cntLines = getCntLines(file)
             val cntWords = getCntWords(file)
-            val cntBytes = file.length()
+            val cntBytes = file.length().toInt()
 
             try {
-                ioEnvironment.outputStream.write(write4BytesToBuffer(cntLines))
-                ioEnvironment.outputStream.write(write4BytesToBuffer(cntWords))
-                ioEnvironment.outputStream.write(write8BytesToBuffer(cntBytes))
+                val str = cntLines.toString() + " " + cntWords.toString() + " " + cntBytes
+                ioEnvironment.outputStream.write(str.toByteArray())
             } catch (e: IOException) {
-                return 0
+                return 1
             }
-            return 1
         }
-        TODO("Not yet implemented")
+        return 0
+    }
+
+
+
+    companion object {
+        fun stringToIntArray(s: String): IntArray {
+            return s.split(" ").map { t -> t.toInt() }.toIntArray()
+        }
     }
 
     private fun getCntLines(file: File): Int {
