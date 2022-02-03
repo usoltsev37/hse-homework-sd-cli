@@ -28,6 +28,12 @@ class ParserTest {
     @Test
     fun testSpaces() = doTest("echo      'fewe    f '   ", Command("echo", listOf("fewe    f ")))
 
+    @Test
+    fun testAssignment() = doTest("a = bbb ", Command("assignment", listOf("a", "bbb")))
+
+    @Test
+    fun testAssignmentWithoutSpaces() = doTest("a='b'", Command("assignment", listOf("a", "b")))
+
     private fun doTest(input: String, expectedCommand: Command) {
         val parser = ParserImpl(input)
 

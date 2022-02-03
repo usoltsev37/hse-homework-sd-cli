@@ -5,5 +5,6 @@ package ru.hse.cli
  */
 object Environment {
 
+    val vars: HashMap<String, String> = HashMap()
     var isShutdowned: Boolean = false
 }

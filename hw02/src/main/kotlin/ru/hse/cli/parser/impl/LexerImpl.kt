@@ -14,17 +14,16 @@ class LexerImpl(private val input: String): Lexer {
      */
     var pos: Int = 0
 
-    private var isExhausted = input.isEmpty()
+    private val myIsExhausted: Boolean
+        get() = pos >= input.length
 
     override fun getNextToken(): Token {
-        check(!isExhausted)
+        check(!isExhausted())
 
-        isExhausted = true
         for (tok in Token.values()) {
             val endOfToken = tok.endOfMatch(input.substring(pos))
             if (endOfToken != -1) {
                 pos += endOfToken
-                isExhausted = pos >= input.length
                 return tok
             }
         }
@@ -33,7 +32,7 @@ class LexerImpl(private val input: String): Lexer {
     }
 
     override fun isExhausted(): Boolean {
-        return isExhausted
+        return myIsExhausted
     }
 
     /**
