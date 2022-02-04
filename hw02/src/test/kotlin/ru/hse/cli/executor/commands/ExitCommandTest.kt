@@ -1,9 +1,9 @@
-package ru.hse.cli.executor
+package ru.hse.cli.executor.commands
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ru.hse.cli.Environment
-import ru.hse.cli.executor.commands.ExitCommand
+import ru.hse.cli.executor.IOEnvironment
 import java.io.ByteArrayOutputStream
 import java.util.*
 

@@ -2,12 +2,10 @@ package ru.hse.cli
 
 object Environment {
 
-    val vars: HashMap<String, String> = hashMapOf()
-
     /**
      * Stores variables with its values
      */
-    val vars: HashMap<String, String> = HashMap()
+    val vars: HashMap<String, String> = hashMapOf()
 
     /**
      * Is CLI shutdowned i.e exit command was executed

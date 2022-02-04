@@ -1,8 +1,8 @@
-package ru.hse.cli.executor
+package ru.hse.cli.executor.commands
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import ru.hse.cli.executor.commands.WcCommand
+import ru.hse.cli.executor.IOEnvironment
 import java.io.ByteArrayOutputStream
 import kotlin.io.path.pathString
 import kotlin.io.path.writeText
