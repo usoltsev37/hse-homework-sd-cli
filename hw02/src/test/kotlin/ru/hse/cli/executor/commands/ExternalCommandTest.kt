@@ -1,15 +1,18 @@
 package ru.hse.cli.executor.commands
 
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ru.hse.cli.Environment
 import ru.hse.cli.executor.IOEnvironment
 import java.io.ByteArrayOutputStream
+import org.junit.jupiter.api.condition.DisabledOnOs
+import org.junit.jupiter.api.condition.OS
+
 
 internal class ExternalCommandTest {
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     fun executeCorrect() {
         val command = ExternalCommand()
 
@@ -22,6 +25,7 @@ internal class ExternalCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     fun executeCorrectWithEnvironment() {
         val command = ExternalCommand()
         Environment.put("hi", "Salam lije!")
@@ -35,6 +39,7 @@ internal class ExternalCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     fun executeWrongWithEnvironment() {
         val command = ExternalCommand()
 
