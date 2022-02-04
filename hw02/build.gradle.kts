@@ -27,3 +27,20 @@ tasks.withType<KotlinCompile> {
 application {
     mainClass.set("MainKt")
 }
+
+tasks.register<Jar>("uberJar") {
+    dependsOn("build")
+    archiveBaseName.set("cli-uber")
+    archiveVersion.set("")
+
+    manifest {
+        attributes["Implementation-Title"] = "Bash CLI"
+        attributes["Main-Class"] = "ru.hse.cli.MainKt"
+    }
+
+    from(
+        configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }
+    )
+    with(tasks.jar.get() as CopySpec)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
