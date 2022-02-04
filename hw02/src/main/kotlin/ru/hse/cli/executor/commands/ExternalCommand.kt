@@ -8,6 +8,14 @@ import java.io.File
  * Represents a call of external command.
  */
 class ExternalCommand : AbstractCommand {
+
+    /**
+     * Execute external command with arguments [args] and IO environment [ioEnvironment].
+     * Execution can be unsuccessful if at least one file doesn't exitst.
+     * @param args file names to process.
+     * @param ioEnvironment stores output and error streams to print a result or error message during execution.
+     * @return 0 if execution was successful, -1 otherwise.
+     */
     override fun execute(args: List<String>, ioEnvironment: IOEnvironment): Int {
         val processBuilder = ProcessBuilder(args)
         val env: MutableMap<String, String> = processBuilder.environment()

@@ -1,5 +1,8 @@
 package ru.hse.cli
 
+/**
+ * Represents static storage that stores environment's state and variables.
+ */
 object Environment {
 
     /**

@@ -3,7 +3,7 @@ package ru.hse.cli.executor
 import ru.hse.cli.executor.commands.*
 
 /**
- * Static storage that stores the map from a command name to an instance of the class.
+ * Represents static storage that stores the map from a command name to an instance of the class.
  */
 object CommandStorage {
     private var storage: HashMap<String, AbstractCommand> = hashMapOf(
@@ -12,6 +12,7 @@ object CommandStorage {
         "exit" to ExitCommand(),
         "cat" to CatCommand(),
         "pwd" to PwdCommand(),
+        "assignment" to AssignmentCommand()
     )
 
     /**
