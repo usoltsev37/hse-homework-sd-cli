@@ -24,7 +24,7 @@ fun main() {
             val commands = parser.parse()
 
             val ioEnvironment = IOEnvironment(
-                inputStream = ByteArrayInputStream(ByteArray(42)),
+                inputStream = ByteArrayInputStream(ByteArray(0)),
                 outputStream = ByteArrayOutputStream(),
                 errorStream = ByteArrayOutputStream()
             )

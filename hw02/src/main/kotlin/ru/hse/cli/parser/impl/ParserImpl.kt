@@ -37,6 +37,7 @@ class ParserImpl(input: String): Parser {
         val lastCurToken = curToken
 
         val res = parseAssignment()
+        accept(Token.TK_SPACE)
         if (res != null) {
             return res
         }
