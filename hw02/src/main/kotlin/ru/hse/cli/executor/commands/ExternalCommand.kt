@@ -24,15 +24,13 @@ class ExternalCommand : AbstractCommand {
             env[variable] = value
         }
 
-        val outputFile = File.createTempFile("tmp", null)
-        val errorFile = File.createTempFile("tmp", null)
-        processBuilder.redirectOutput(outputFile)
-        processBuilder.redirectError(errorFile)
+        val process = processBuilder.start()
 
-        processBuilder.start().waitFor()
+        ioEnvironment.inputStream.transferTo(process.outputStream)
+        process.waitFor()
 
-        ioEnvironment.outputStream.write(outputFile.readBytes())
-        ioEnvironment.errorStream.write(errorFile.readBytes())
+        process.inputStream.transferTo(ioEnvironment.outputStream)
+        process.errorStream.transferTo(ioEnvironment.errorStream)
 
         return if (ioEnvironment.errorStream.toString().isEmpty()) {
             0

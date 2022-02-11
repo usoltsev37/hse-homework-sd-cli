@@ -54,11 +54,6 @@ class WcCommand : AbstractCommand {
         return 0
     }
 
-    private fun isFileExists(filename: String): Boolean {
-        return File(filename).exists()
-    }
-
-
     companion object {
         fun stringToIntArray(s: String): IntArray {
             return s.split(" ").map { t -> t.toInt() }.toIntArray()
@@ -81,27 +76,5 @@ class WcCommand : AbstractCommand {
             cntWords++
         }
         return cntWords
-    }
-
-    private fun write4BytesToBuffer(data: Int): ByteArray  {
-        val buffer = ByteArray(4)
-        buffer[0] = (data shr 0).toByte()
-        buffer[1] = (data shr 8).toByte()
-        buffer[2] = (data shr 16).toByte()
-        buffer[3] = (data shr 24).toByte()
-        return buffer
-    }
-
-    private fun write8BytesToBuffer(data: Long): ByteArray  {
-        val buffer = ByteArray(8)
-        buffer[0] = (data shr 0).toByte()
-        buffer[1] = (data shr 8).toByte()
-        buffer[2] = (data shr 16).toByte()
-        buffer[3] = (data shr 24).toByte()
-        buffer[4] = (data shr 32).toByte()
-        buffer[5] = (data shr 40).toByte()
-        buffer[6] = (data shr 48).toByte()
-        buffer[7] = (data shr 56).toByte()
-        return buffer
     }
 }

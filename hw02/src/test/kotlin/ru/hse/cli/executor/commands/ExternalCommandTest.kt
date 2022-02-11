@@ -13,15 +13,15 @@ import java.io.ByteArrayInputStream
 internal class ExternalCommandTest {
 
     @Test
-    @DisabledOnOs(OS.WINDOWS)
     fun executeCorrect() {
         val command = ExternalCommand()
 
-        val ioEnvironment = IOEnvironment(ByteArrayInputStream(ByteArray(1)),  ByteArrayOutputStream(), ByteArrayOutputStream())
+        val ioEnvironment =
+            IOEnvironment(ByteArrayInputStream(ByteArray(1)), ByteArrayOutputStream(), ByteArrayOutputStream())
 
-        val result = command.execute(listOf("/bin/bash", "-c", "echo hello"), ioEnvironment)
+        val result = command.execute(listOf("git", "--version"), ioEnvironment)
         assertEquals(0, result)
-        assertEquals("hello\n", ioEnvironment.outputStream.toString())
+        assertTrue(ioEnvironment.outputStream.toString().startsWith("git version"))
         assertTrue(ioEnvironment.errorStream.toString().isEmpty())
     }
 
@@ -31,7 +31,8 @@ internal class ExternalCommandTest {
         val command = ExternalCommand()
         Environment.put("hi", "Salam lije!")
 
-        val ioEnvironment = IOEnvironment(ByteArrayInputStream(ByteArray(1)), ByteArrayOutputStream(), ByteArrayOutputStream())
+        val ioEnvironment =
+            IOEnvironment(ByteArrayInputStream(ByteArray(1)), ByteArrayOutputStream(), ByteArrayOutputStream())
 
         val result = command.execute(listOf("/bin/bash", "-c", "echo \$hi"), ioEnvironment)
         assertEquals(0, result)
@@ -40,13 +41,13 @@ internal class ExternalCommandTest {
     }
 
     @Test
-    @DisabledOnOs(OS.WINDOWS)
-    fun executeWrongWithEnvironment() {
+    fun executeWrong() {
         val command = ExternalCommand()
 
-        val ioEnvironment = IOEnvironment(ByteArrayInputStream(ByteArray(1)), ByteArrayOutputStream(), ByteArrayOutputStream())
+        val ioEnvironment =
+            IOEnvironment(ByteArrayInputStream(ByteArray(1)), ByteArrayOutputStream(), ByteArrayOutputStream())
 
-        val result = command.execute(listOf("/bin/bash", "-c", "eco hi"), ioEnvironment)
+        val result = command.execute(listOf("git", "--verson"), ioEnvironment)
         assertEquals(-1, result)
         assertTrue(ioEnvironment.errorStream.toString().isNotEmpty())
     }
