@@ -35,13 +35,9 @@ class CatCommand : AbstractCommand {
         var result = 0
         if (args.isEmpty()) {
             val files = ioEnvironment.inputStream.toString().split(" ")
-            if (forEachWrite(files, ioEnvironment) == -1) {
-                result = -1
-            }
+            result = if (forEachWrite(files, ioEnvironment) == -1) -1 else result
         } else {
-            if (forEachWrite(args, ioEnvironment) == -1) {
-                result = -1
-            }
+            result = if (forEachWrite(args, ioEnvironment) == -1) -1 else result
         }
 
         return result
