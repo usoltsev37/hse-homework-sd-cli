@@ -21,6 +21,18 @@ class WcCommand : AbstractCommand {
      * @return 2 if file not found or can
      */
     override fun execute(args: List<String>, ioEnvironment: IOEnvironment): Int {
+        var result = 0
+        if (args.isEmpty()) {
+            val data = ioEnvironment.inputStream.toString().split(" ")
+            result = if (forEachExecute(data, ioEnvironment) == -1) -1 else result
+        } else {
+            result = if (forEachExecute(args, ioEnvironment) == -1) -1 else result
+        }
+
+        return result
+    }
+
+    private fun forEachExecute(args: List<String>, ioEnvironment: IOEnvironment): Int {
         for (arg in args) {
             var file = File(arg)
             if (!file.exists()) {
@@ -42,6 +54,9 @@ class WcCommand : AbstractCommand {
         return 0
     }
 
+    private fun isFileExists(filename: String): Boolean {
+        return File(filename).exists()
+    }
 
 
     companion object {
