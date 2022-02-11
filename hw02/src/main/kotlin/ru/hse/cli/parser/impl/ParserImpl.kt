@@ -21,8 +21,14 @@ class ParserImpl(input: String): Parser {
     private val errorMessage
        get() = "Parser Error: position ${lexer.pos}"
 
-    override fun parse(): Command {
-        return parseCommand()
+    override fun parse(): List<Command> {
+        val result = ArrayList<Command>()
+        result.add(parseCommand())
+        while (accept(Token.TK_PIPE)) {
+            accept(Token.TK_SPACE)
+            result.add(parseCommand())
+        }
+        return result
     }
 
     private fun parseCommand(): Command {
@@ -67,9 +73,11 @@ class ParserImpl(input: String): Parser {
 
     private fun parseArgs(): List<String> {
         val result = ArrayList<String>()
-        result.add(parseString())
-        while (!lexer.isExhausted() && accept(Token.TK_SPACE)) {
+        if (curToken != Token.TK_PIPE) {
             result.add(parseString())
+            while (!lexer.isExhausted() && accept(Token.TK_SPACE) && curToken != Token.TK_PIPE) {
+                result.add(parseString())
+            }
         }
         return result
     }

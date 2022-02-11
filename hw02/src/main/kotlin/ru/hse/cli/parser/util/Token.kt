@@ -10,7 +10,7 @@ enum class Token(regex: String) {
     TK_SPACE("\\s+"),
     TK_ASSIGN("="),
 
-    TK_STR("[^'\"=\\s]+"),
+    TK_STR("[^'\"=|\\s]+"),
     TK_STR_IN1("\"[^\"]+\""),
     TK_STR_IN2("\'[^']+\'");
 
