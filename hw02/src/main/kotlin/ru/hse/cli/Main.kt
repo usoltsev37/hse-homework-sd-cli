@@ -4,6 +4,7 @@ import ru.hse.cli.executor.Executor
 import ru.hse.cli.executor.IOEnvironment
 import ru.hse.cli.parser.Parser
 import ru.hse.cli.parser.impl.ParserImpl
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 fun main(args: Array<String>) {
@@ -18,6 +19,7 @@ fun main(args: Array<String>) {
         val command = parser.parse()
 
         val ioEnvironment = IOEnvironment(
+            inputStream = ByteArrayInputStream(ByteArray(42)),
             outputStream = ByteArrayOutputStream(),
             errorStream = ByteArrayOutputStream()
         )

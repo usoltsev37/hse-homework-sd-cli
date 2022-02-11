@@ -4,13 +4,14 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import ru.hse.cli.parser.util.Command
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 internal class ExecutorTest {
 
     @Test
     fun executeCorrect() {
-        val ioEnvironment = IOEnvironment(ByteArrayOutputStream(), ByteArrayOutputStream())
+        val ioEnvironment = IOEnvironment(ByteArrayInputStream(ByteArray(42)), ByteArrayOutputStream(), ByteArrayOutputStream())
         val executor = Executor(Command(name = "echo", listOf("hello")), ioEnvironment)
 
         executor.execute()
@@ -22,7 +23,7 @@ internal class ExecutorTest {
     @Test
     fun executeNotCorrect() {
         val fileName = "somefile.txt"
-        val ioEnvironment = IOEnvironment(ByteArrayOutputStream(), ByteArrayOutputStream())
+        val ioEnvironment = IOEnvironment(ByteArrayInputStream(ByteArray(42)), ByteArrayOutputStream(), ByteArrayOutputStream())
         val executor = Executor(Command(name = "cat", listOf(fileName)), ioEnvironment)
 
         executor.execute()

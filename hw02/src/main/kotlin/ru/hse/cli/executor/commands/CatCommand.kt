@@ -13,6 +13,17 @@ class CatCommand : AbstractCommand {
         return File(fileName).readBytes()
     }
 
+    private fun forEachWrite(args: List<String>, ioEnvironment: IOEnvironment): Int {
+        args.forEach {
+            try {
+                ioEnvironment.outputStream.write(getData(it))
+            } catch (e: FileNotFoundException) {
+                ioEnvironment.errorStream.write("File '$it' does not exist!".toByteArray())
+                return -1
+            }
+        }
+        return 0
+    }
     /**
      * Execute [cat] command with arguments [args] and IO environment [ioEnvironment].
      * Execution can be unsuccessful if at least one file doesn't exitst.
@@ -22,12 +33,13 @@ class CatCommand : AbstractCommand {
      */
     override fun execute(args: List<String>, ioEnvironment: IOEnvironment): Int {
         var result = 0
-
-        args.forEach {
-            try {
-                ioEnvironment.outputStream.write(getData(it))
-            } catch (e: FileNotFoundException) {
-                ioEnvironment.errorStream.write("File '$it' does not exist!".toByteArray())
+        if (args.isEmpty()) {
+            val files = ioEnvironment.inputStream.toString().split(" ")
+            if (forEachWrite(files, ioEnvironment) == -1) {
+                result = -1
+            }
+        } else {
+            if (forEachWrite(args, ioEnvironment) == -1) {
                 result = -1
             }
         }

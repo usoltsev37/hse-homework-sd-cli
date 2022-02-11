@@ -11,9 +11,10 @@ internal class PwdCommandTest {
     @Test
     fun testExecuteResult() {
         val pwdCommand = PwdCommand()
+        val inputStream = ByteArrayInputStream(ByteArray(1))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
-        val ioEnvironment = IOEnvironment(outputStream, errorStream)
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
         assertEquals(0, pwdCommand.execute(listOf(), ioEnvironment))
     }
 
@@ -21,9 +22,10 @@ internal class PwdCommandTest {
     fun testExecuteOutput() {
         val pwdCommand = PwdCommand()
         val expected = System.getProperty("user.dir")
+        val inputStream = ByteArrayInputStream(ByteArray(1))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
-        val ioEnvironment = IOEnvironment(outputStream, errorStream)
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
         pwdCommand.execute(listOf(), ioEnvironment)
         assertEquals(expected, ioEnvironment.outputStream.toString())
     }
@@ -31,9 +33,10 @@ internal class PwdCommandTest {
     @Test
     fun testExecuteError() {
         val pwdCommand = PwdCommand()
+        val inputStream = ByteArrayInputStream(ByteArray(1))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
-        val ioEnvironment = IOEnvironment(outputStream, errorStream)
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
         pwdCommand.execute(listOf(), ioEnvironment)
         assertTrue(ioEnvironment.errorStream.toString().isEmpty())
     }

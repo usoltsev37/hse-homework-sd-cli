@@ -1,13 +1,15 @@
 package ru.hse.cli.executor
 
+import java.io.InputStream
 import java.io.OutputStream
 
 /**
  * Stores streams for an interaction between a command and IO.
+ * @param inputStream stores a correct input.
  * @param outputStream stores a correct output.
  * @param errorStream stores errors occurred during execution.
  */
-class IOEnvironment constructor(val outputStream: OutputStream, val errorStream: OutputStream) {
+class IOEnvironment constructor(val inputStream: InputStream, val outputStream: OutputStream, val errorStream: OutputStream) {
 
     /**
      * Prints a current state of streams.
@@ -15,6 +17,7 @@ class IOEnvironment constructor(val outputStream: OutputStream, val errorStream:
      */
     fun printState() {
         if (errorStream.toString().isEmpty()) {
+            println(inputStream.toString())
             println(outputStream.toString())
         } else {
             println("Error: ")
