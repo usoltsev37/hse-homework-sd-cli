@@ -7,17 +7,18 @@ import ru.hse.cli.executor.IOEnvironment
 import java.io.ByteArrayOutputStream
 import org.junit.jupiter.api.condition.DisabledOnOs
 import org.junit.jupiter.api.condition.OS
+import ru.hse.cli.executor.BaseExecutorTest
 import java.io.ByteArrayInputStream
 
 
-internal class ExternalCommandTest {
+internal class ExternalCommandTest: BaseExecutorTest() {
 
     @Test
     fun executeCorrect() {
         val command = ExternalCommand()
 
         val ioEnvironment =
-            IOEnvironment(ByteArrayInputStream(ByteArray(1)), ByteArrayOutputStream(), ByteArrayOutputStream())
+            IOEnvironment(ByteArrayInputStream(ByteArray(0)), ByteArrayOutputStream(), ByteArrayOutputStream())
 
         val result = command.execute(listOf("git", "--version"), ioEnvironment)
         assertEquals(0, result)
@@ -32,7 +33,7 @@ internal class ExternalCommandTest {
         Environment.put("hi", "Salam lije!")
 
         val ioEnvironment =
-            IOEnvironment(ByteArrayInputStream(ByteArray(1)), ByteArrayOutputStream(), ByteArrayOutputStream())
+            IOEnvironment(ByteArrayInputStream(ByteArray(0)), ByteArrayOutputStream(), ByteArrayOutputStream())
 
         val result = command.execute(listOf("/bin/bash", "-c", "echo \$hi"), ioEnvironment)
         assertEquals(0, result)
@@ -45,7 +46,7 @@ internal class ExternalCommandTest {
         val command = ExternalCommand()
 
         val ioEnvironment =
-            IOEnvironment(ByteArrayInputStream(ByteArray(1)), ByteArrayOutputStream(), ByteArrayOutputStream())
+            IOEnvironment(ByteArrayInputStream(ByteArray(0)), ByteArrayOutputStream(), ByteArrayOutputStream())
 
         val result = command.execute(listOf("git", "--verson"), ioEnvironment)
         assertEquals(-1, result)

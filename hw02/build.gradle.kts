@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("commons-io:commons-io:2.6")
 }
 
 tasks.test {

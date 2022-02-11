@@ -19,6 +19,8 @@ class ExternalCommand : AbstractCommand {
      * @return 0 if execution was successful, -1 otherwise.
      */
     override fun execute(args: List<String>, ioEnvironment: IOEnvironment): Int {
+        ioEnvironment.inputStream.reset()
+
         val processBuilder = ProcessBuilder(args)
         val env: MutableMap<String, String> = processBuilder.environment()
 

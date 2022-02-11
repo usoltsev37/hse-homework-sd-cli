@@ -3,6 +3,8 @@ package ru.hse.cli.executor.commands
 import ru.hse.cli.executor.IOEnvironment
 import java.io.File
 import java.io.FileNotFoundException
+import kotlin.io.path.readBytes
+import kotlin.io.path.writeText
 
 /**
  * Represents the command [cat] which returns the contents of a file.
@@ -24,6 +26,11 @@ class CatCommand : AbstractCommand {
         }
         return 0
     }
+
+    private fun bodyWrite(fileBody: String, ioEnvironment: IOEnvironment): Int {
+        ioEnvironment.outputStream.write(fileBody.toByteArray())
+        return 0
+    }
     /**
      * Execute [cat] command with arguments [args] and IO environment [ioEnvironment].
      * Execution can be unsuccessful if at least one file doesn't exitst.
@@ -34,9 +41,10 @@ class CatCommand : AbstractCommand {
     override fun execute(args: List<String>, ioEnvironment: IOEnvironment): Int {
         var result = 0
         if (args.isEmpty()) {
-            val files = ioEnvironment.inputStream.toString().split(" ")
-            result = if (forEachWrite(files, ioEnvironment) == -1) -1 else result
+            val body = ioEnvironment.inputStream.toString()
+//            bodyWrite(body)
         } else {
+            ioEnvironment.inputStream.reset()
             result = if (forEachWrite(args, ioEnvironment) == -1) -1 else result
         }
 

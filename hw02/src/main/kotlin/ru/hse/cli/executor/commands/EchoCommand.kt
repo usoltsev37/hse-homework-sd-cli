@@ -1,7 +1,10 @@
 package ru.hse.cli.executor.commands
 
 import ru.hse.cli.executor.IOEnvironment
+import org.apache.commons.io.IOUtils
 import java.io.IOException
+import java.nio.charset.StandardCharsets
+import java.util.*
 
 /**
  * The command that displays its argument (or arguments)
@@ -14,8 +17,9 @@ class EchoCommand : AbstractCommand {
      */
     override fun execute(args: List<String>, ioEnvironment: IOEnvironment): Int {
         try {
-            val array: Array<String> = Array(args.size) { i -> args[i] }
-            ioEnvironment.outputStream.write(array.joinToString(separator = " ").toByteArray())
+            ioEnvironment.inputStream.reset()
+
+            ioEnvironment.outputStream.write(args.joinToString(separator = " ").toByteArray())
         } catch (e: IOException) {
             return 1
         }

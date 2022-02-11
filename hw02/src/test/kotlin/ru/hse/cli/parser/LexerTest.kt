@@ -22,6 +22,10 @@ class LexerTest {
     @Test
     fun testAssignment() = doTest("a=b", Token.TK_STR, Token.TK_ASSIGN, Token.TK_STR)
 
+    @Test
+    fun testLexPipe() = doTest("echo ww | wc", Token.TK_STR, Token.TK_SPACE, Token.TK_STR, Token.TK_SPACE,
+                                                     Token.TK_PIPE, Token.TK_SPACE, Token.TK_STR)
+
     private fun doTest(input: String, vararg expectedTokens: Token) {
         val lexer = LexerImpl(input)
         val tokens = ArrayList<Token>()

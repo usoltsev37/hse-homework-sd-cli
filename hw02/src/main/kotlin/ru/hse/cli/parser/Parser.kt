@@ -12,5 +12,5 @@ interface Parser {
      * @throws [IllegalStateException] when parsing fails
      * @return [Command]: representation of given string
      */
-    fun parse(): Command
+    fun parse(): List<Command>
 }
