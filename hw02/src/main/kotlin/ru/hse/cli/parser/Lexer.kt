@@ -2,6 +2,13 @@ package ru.hse.cli.parser
 
 import ru.hse.cli.parser.util.Token
 
+/**
+ * Interface for the SayShell lexer
+ *
+ * Splits the input string into tokens
+ * @see [Parser]
+ * @see [Token]
+ */
 interface Lexer {
 
     /**

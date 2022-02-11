@@ -2,6 +2,10 @@ package ru.hse.cli.parser
 
 import ru.hse.cli.parser.util.Command
 
+/**
+ * Interface for the SayShell parser
+ * @see [Lexer]
+ */
 interface Parser {
 
     /** Parse given input and build [Command]

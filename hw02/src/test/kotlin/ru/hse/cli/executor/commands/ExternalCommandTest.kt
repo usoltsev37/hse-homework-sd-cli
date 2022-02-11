@@ -7,6 +7,7 @@ import ru.hse.cli.executor.IOEnvironment
 import java.io.ByteArrayOutputStream
 import org.junit.jupiter.api.condition.DisabledOnOs
 import org.junit.jupiter.api.condition.OS
+import java.io.ByteArrayInputStream
 
 
 internal class ExternalCommandTest {
@@ -16,7 +17,7 @@ internal class ExternalCommandTest {
     fun executeCorrect() {
         val command = ExternalCommand()
 
-        val ioEnvironment = IOEnvironment(ByteArrayOutputStream(), ByteArrayOutputStream())
+        val ioEnvironment = IOEnvironment(ByteArrayInputStream(ByteArray(1)),  ByteArrayOutputStream(), ByteArrayOutputStream())
 
         val result = command.execute(listOf("/bin/bash", "-c", "echo hello"), ioEnvironment)
         assertEquals(0, result)
@@ -30,7 +31,7 @@ internal class ExternalCommandTest {
         val command = ExternalCommand()
         Environment.put("hi", "Salam lije!")
 
-        val ioEnvironment = IOEnvironment(ByteArrayOutputStream(), ByteArrayOutputStream())
+        val ioEnvironment = IOEnvironment(ByteArrayInputStream(ByteArray(1)), ByteArrayOutputStream(), ByteArrayOutputStream())
 
         val result = command.execute(listOf("/bin/bash", "-c", "echo \$hi"), ioEnvironment)
         assertEquals(0, result)
@@ -43,7 +44,7 @@ internal class ExternalCommandTest {
     fun executeWrongWithEnvironment() {
         val command = ExternalCommand()
 
-        val ioEnvironment = IOEnvironment(ByteArrayOutputStream(), ByteArrayOutputStream())
+        val ioEnvironment = IOEnvironment(ByteArrayInputStream(ByteArray(1)), ByteArrayOutputStream(), ByteArrayOutputStream())
 
         val result = command.execute(listOf("/bin/bash", "-c", "eco hi"), ioEnvironment)
         assertEquals(-1, result)

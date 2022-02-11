@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import ru.hse.cli.executor.IOEnvironment
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.nio.file.Path
 import kotlin.io.path.pathString
@@ -18,9 +19,10 @@ internal class CatCommandTest {
         val file = kotlin.io.path.createTempFile()
         file.writeText(message)
 
+        val inputStream = ByteArrayInputStream(ByteArray(1))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
-        val ioEnvironment = IOEnvironment(outputStream, errorStream)
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
 
         assertEquals(0, catCommand.execute(listOf(file.pathString), ioEnvironment))
         assertEquals(message, ioEnvironment.outputStream.toString())
@@ -39,9 +41,10 @@ internal class CatCommandTest {
             files[i].writeText(messages[i])
         }
 
+        val inputStream = ByteArrayInputStream(ByteArray(1))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
-        val ioEnvironment = IOEnvironment(outputStream, errorStream)
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
 
         val result = catCommand.execute(files.map { it.pathString }, ioEnvironment)
         assertEquals(0, result)
@@ -53,9 +56,10 @@ internal class CatCommandTest {
     @Test
     fun executeFailureFileNotExist() {
         val catCommand = CatCommand()
+        val inputStream = ByteArrayInputStream(ByteArray(1))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
-        val ioEnvironment = IOEnvironment(outputStream, errorStream)
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
 
         val filename = "thisfiledoesntexist.txt"
         val result = catCommand.execute(listOf(filename), ioEnvironment)

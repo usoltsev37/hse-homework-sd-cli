@@ -14,8 +14,8 @@ class EchoCommand : AbstractCommand {
      */
     override fun execute(args: List<String>, ioEnvironment: IOEnvironment): Int {
         try {
-            val arr: Array<String> = Array(args.size) { i -> args[i] }
-            ioEnvironment.outputStream.write(arr.joinToString(separator = " ").toByteArray())
+            val array: Array<String> = Array(args.size) { i -> args[i] }
+            ioEnvironment.outputStream.write(array.joinToString(separator = " ").toByteArray())
         } catch (e: IOException) {
             return 1
         }

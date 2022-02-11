@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ru.hse.cli.executor.IOEnvironment
 import java.io.ByteArrayOutputStream
+import java.io.ByteArrayInputStream
 import kotlin.io.path.pathString
 import kotlin.io.path.writeText
 
@@ -15,9 +16,10 @@ internal class WcCommandTest {
                 "I'll be seeing you in hell"
         val file = kotlin.io.path.createTempFile()
         file.writeText(fileMessage)
+        val inputStream = ByteArrayInputStream(ByteArray(1))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
-        val ioEnvironment = IOEnvironment(outputStream, errorStream)
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
 
         Assertions.assertEquals(0, wcCommand.execute(listOf(file.pathString), ioEnvironment))
         Assertions.assertEquals(listOf(2, 11, 51), WcCommand.stringToIntArray(ioEnvironment.outputStream.toString()).asList())
@@ -30,9 +32,10 @@ internal class WcCommandTest {
                 "Die, die, die\n" +
                 "Die, die, die\n" +
                 "Die"
+        val inputStream = ByteArrayInputStream(ByteArray(1))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
-        val ioEnvironment = IOEnvironment(outputStream, errorStream)
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
 
         Assertions.assertEquals(0, wcCommand.execute(listOf(text), ioEnvironment))
         Assertions.assertEquals(listOf(4, 10, 45), WcCommand.stringToIntArray(ioEnvironment.outputStream.toString()).asList())
