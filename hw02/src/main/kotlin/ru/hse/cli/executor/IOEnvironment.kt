@@ -17,7 +17,6 @@ class IOEnvironment constructor(val inputStream: InputStream, val outputStream: 
      */
     fun printState() {
         if (errorStream.toString().isEmpty()) {
-            println(inputStream.toString())
             println(outputStream.toString())
         } else {
             println("Error: ")

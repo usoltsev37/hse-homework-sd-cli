@@ -1,8 +1,10 @@
 package ru.hse.cli.executor.commands
 
 import ru.hse.cli.Environment
+import ru.hse.cli.exception.UnknownCommandException
 import ru.hse.cli.executor.IOEnvironment
 import java.io.File
+import java.io.IOException
 
 /**
  * Represents a call of external command.
@@ -24,7 +26,12 @@ class ExternalCommand : AbstractCommand {
             env[variable] = value
         }
 
-        val process = processBuilder.start()
+        val process: Process =
+            try {
+                processBuilder.start()
+            } catch (e: IOException) {
+                throw UnknownCommandException(args[0])
+            }
 
         ioEnvironment.inputStream.transferTo(process.outputStream)
         process.waitFor()

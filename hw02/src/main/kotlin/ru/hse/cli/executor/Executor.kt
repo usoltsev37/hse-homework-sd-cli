@@ -1,5 +1,6 @@
 package ru.hse.cli.executor
 
+import ru.hse.cli.executor.commands.ExternalCommand
 import ru.hse.cli.parser.util.Command
 
 /**
@@ -15,6 +16,11 @@ class Executor constructor(private val command: Command, private val ioEnvironme
     fun execute() {
         val executionCommand = CommandStorage.getCommand(command.name)
 
-        executionCommand.execute(command.args, ioEnvironment)
+        val args = ArrayList(command.args)
+        if (executionCommand is ExternalCommand) {
+            args.add(0, command.name)
+        }
+
+        executionCommand.execute(args, ioEnvironment)
     }
 }
