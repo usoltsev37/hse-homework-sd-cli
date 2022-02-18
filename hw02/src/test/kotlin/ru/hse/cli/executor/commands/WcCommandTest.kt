@@ -16,33 +16,35 @@ internal class WcCommandTest {
                 "I'll be seeing you in hell"
         val file = kotlin.io.path.createTempFile()
         file.writeText(fileMessage)
-        val inputStream = ByteArrayInputStream(ByteArray(1))
+        val inputStream = ByteArrayInputStream(ByteArray(0))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
         val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
 
         Assertions.assertEquals(0, wcCommand.execute(listOf(file.pathString), ioEnvironment))
-        Assertions.assertEquals(listOf(2, 11, 51), WcCommand.stringToIntArray(ioEnvironment.outputStream.toString()).asList())
-    }
-
-    @Test
-    fun executeText() {
-        val wcCommand = WcCommand()
-        val text = "Die, die, die\n" +
-                "Die, die, die\n" +
-                "Die, die, die\n" +
-                "Die"
-        val inputStream = ByteArrayInputStream(ByteArray(1))
-        val outputStream = ByteArrayOutputStream()
-        val errorStream = ByteArrayOutputStream()
-        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
-
-        Assertions.assertEquals(0, wcCommand.execute(listOf(text), ioEnvironment))
-        Assertions.assertEquals(listOf(4, 10, 45), WcCommand.stringToIntArray(ioEnvironment.outputStream.toString()).asList())
+        Assertions.assertEquals(
+            listOf(2, 11, 51),
+            WcCommand.stringToIntArray(ioEnvironment.outputStream.toString()).asList()
+        )
     }
 
     @Test
     fun stringToIntArrayCorrect() {
         Assertions.assertEquals(listOf(12, 432, 10000), WcCommand.stringToIntArray("12 432 10000").toList())
+    }
+
+    @Test
+    fun executeEmptyInput() {
+        val wcCommand = WcCommand()
+        val inputStream = ByteArrayInputStream(ByteArray(0))
+        val outputStream = ByteArrayOutputStream()
+        val errorStream = ByteArrayOutputStream()
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
+
+        Assertions.assertEquals(0, wcCommand.execute(emptyList(), ioEnvironment))
+        Assertions.assertEquals(
+            listOf(0, 0, 0),
+            WcCommand.stringToIntArray(ioEnvironment.outputStream.toString()).asList()
+        )
     }
 }

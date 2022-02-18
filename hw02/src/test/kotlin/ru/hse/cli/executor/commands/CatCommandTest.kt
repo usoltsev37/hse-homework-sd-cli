@@ -67,4 +67,18 @@ internal class CatCommandTest {
 
         assertEquals("File '$filename' does not exist!", ioEnvironment.errorStream.toString())
     }
+
+    @Test
+    fun executeEmptyInput() {
+        val catCommand = CatCommand()
+        val inputStream = ByteArrayInputStream(ByteArray(0))
+        val outputStream = ByteArrayOutputStream()
+        val errorStream = ByteArrayOutputStream()
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
+
+        val result = catCommand.execute(emptyList(), ioEnvironment)
+        assertEquals(0, result)
+
+        assertEquals("", ioEnvironment.errorStream.toString())
+    }
 }
