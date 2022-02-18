@@ -2,24 +2,33 @@ package ru.hse.cli.parser
 
 import ru.hse.cli.Environment
 
+/**
+ * Represents string processing with substitution of variables from [Environment]
+ */
 object InputPreprocessor {
 
+    /**
+     * Perform substitution of variables from [Environment] into [input] string
+     */
     fun substitute(input: String): String {
-        var b1 = false
-        var b2 = false
+        var doubleQuoteMode = false
+        var singleQuoteMode = false
 
         val result = StringBuilder()
         val len = input.length
         var i = 0
         while (i < len) {
-            val c = input[i]
-            if (c == '"' && !b2) {
-                b1 = !b1
+            val currentChar = input[i]
+
+            if (currentChar == '"' && !singleQuoteMode) {
+                doubleQuoteMode = !doubleQuoteMode
             }
-            if (c == '\'' &&  !b1) {
-                b2 = !b2
+
+            if (currentChar == '\'' && !doubleQuoteMode) {
+                singleQuoteMode = !singleQuoteMode
             }
-            if (c == '$' && !b2) {
+
+            if (currentChar == '$' && !singleQuoteMode) {
                 var varName = ""
                 i++
                 while (i < len && input[i] != '"' && input[i] != '\'' && input[i] != '=' &&
@@ -30,7 +39,8 @@ object InputPreprocessor {
                 result.append(Environment.vars[varName] ?: "")
                 continue
             }
-            result.append(c)
+
+            result.append(currentChar)
             i++
         }
 

@@ -1,5 +1,7 @@
 package ru.hse.cli
 
+import ru.hse.cli.exception.LexerException
+import ru.hse.cli.exception.ParserException
 import ru.hse.cli.exception.UnknownCommandException
 import ru.hse.cli.executor.Executor
 import ru.hse.cli.executor.IOEnvironment
@@ -37,6 +39,10 @@ fun main() {
             e.printStackTrace()
         } catch (e: UnknownCommandException) {
             println("Unknown command: ${e.name}")
+        } catch (e: LexerException) {
+            println(e.name)
+        } catch (e: ParserException) {
+            println(e.name)
         }
     }
 }

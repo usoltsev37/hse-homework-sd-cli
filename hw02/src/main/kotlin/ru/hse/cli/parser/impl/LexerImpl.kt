@@ -1,5 +1,6 @@
 package ru.hse.cli.parser.impl
 
+import ru.hse.cli.exception.LexerException
 import ru.hse.cli.parser.Lexer
 import ru.hse.cli.parser.util.Token
 
@@ -7,7 +8,7 @@ import ru.hse.cli.parser.util.Token
  * Base implementation of [Lexer].
  * @see [Token]
  */
-class LexerImpl(private val input: String): Lexer {
+class LexerImpl(private val input: String) : Lexer {
 
     /**
      * Current position in input string
@@ -28,7 +29,13 @@ class LexerImpl(private val input: String): Lexer {
             }
         }
 
-        throw IllegalStateException("Lexer Error: position $pos")
+        throw LexerException(
+            """
+            Lexer Error!
+            Command: $input
+            Position $pos
+            """.trimIndent()
+        )
     }
 
     override fun isExhausted(): Boolean {
