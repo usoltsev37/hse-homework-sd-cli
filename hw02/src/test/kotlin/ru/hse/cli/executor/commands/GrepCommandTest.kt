@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import kotlin.io.path.pathString
 import kotlin.io.path.writeText
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 internal class GrepCommandTest : BaseExecutorTest() {
@@ -113,29 +114,206 @@ internal class GrepCommandTest : BaseExecutorTest() {
         )
     }
 
-//    @Test
-//    fun parseTestIgnore() {
-//        val grepCommand = GrepCommand()
-//        val fileMessage = "I'm on the highway to hell\n" +
-//                "On the needle highway to hell\n" +
-//                "Highway to hell\n" +
-//                "I'm on the highway to hell nEEdlE"
-//        val file = kotlin.io.path.createTempFile()
-//        file.writeText(fileMessage)
-//        val grepParser = GrepParser()
-//        grepParser.parse(listOf("Needle", "-i"))
-//        assertTrue(grepParser.ignoreCase)
-//
-//        val inputStream = ByteArrayInputStream(ByteArray(0))
-//        val outputStream = ByteArrayOutputStream()
-//        val errorStream = ByteArrayOutputStream()
-//        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
-//
-//        Assertions.assertEquals(0, grepCommand.execute(listOf("needle", file.pathString, "-i"), ioEnvironment))
-//        Assertions.assertEquals(
-//            "On the needle highway to hell\n" +
-//                    "I'm on the highway to hell nEEdlE",
-//            ioEnvironment.outputStream.toString()
-//        )
-//    }
+    @Test
+    fun parseTestIgnore() {
+        val grepCommand = GrepCommand()
+        val fileMessage = "I'm on the highway to hell\n" +
+                "On the s43needle highway to hell\n" +
+                "Highway to hell\n" +
+                "I'm on the highway to hell nEEdlE123"
+        val file = kotlin.io.path.createTempFile()
+        file.writeText(fileMessage)
+
+        val inputStream = ByteArrayInputStream(ByteArray(0))
+        val outputStream = ByteArrayOutputStream()
+        val errorStream = ByteArrayOutputStream()
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
+
+        Assertions.assertEquals(0, grepCommand.execute(listOf("needle", file.pathString, "-i"), ioEnvironment))
+        Assertions.assertEquals(
+            "On the s43needle highway to hell\n" +
+                    "I'm on the highway to hell nEEdlE123",
+            ioEnvironment.outputStream.toString()
+        )
+    }
+
+    @Test
+    fun parseTestAfterContextUsual() {
+        val grepCommand = GrepCommand()
+        val fileMessage = """
+            a
+            b
+            c
+            d
+            a
+            d
+            c
+        """.trimIndent()
+        val file = kotlin.io.path.createTempFile()
+        file.writeText(fileMessage)
+
+        val inputStream = ByteArrayInputStream(ByteArray(0))
+        val outputStream = ByteArrayOutputStream()
+        val errorStream = ByteArrayOutputStream()
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
+
+        Assertions.assertEquals(0, grepCommand.execute(listOf("a", file.pathString, "-A", "1"), ioEnvironment))
+        Assertions.assertEquals(
+            """
+                a
+                b
+                a
+                d
+            """.trimIndent(),
+            ioEnvironment.outputStream.toString()
+        )
+    }
+
+    @Test
+    fun parseTestAfterContextAfterEnd() {
+        val grepCommand = GrepCommand()
+        val fileMessage = """
+            a
+            b
+            c
+            d
+            a
+            b
+            c
+            a
+        """.trimIndent()
+        val file = kotlin.io.path.createTempFile()
+        file.writeText(fileMessage)
+
+        val inputStream = ByteArrayInputStream(ByteArray(0))
+        val outputStream = ByteArrayOutputStream()
+        val errorStream = ByteArrayOutputStream()
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
+
+        Assertions.assertEquals(0, grepCommand.execute(listOf("a", file.pathString, "-A", "1"), ioEnvironment))
+        Assertions.assertEquals(
+            """
+                a
+                b
+                a
+                b
+                a
+            """.trimIndent(),
+            ioEnvironment.outputStream.toString()
+        )
+    }
+
+    @Test
+    fun parseTestAfterContextOverlap() {
+        val grepCommand = GrepCommand()
+        val fileMessage = """
+            b
+            a
+            c
+            a
+            b
+            a
+            e
+            e
+            c
+            z
+            f
+            d
+        """.trimIndent()
+        val file = kotlin.io.path.createTempFile()
+        file.writeText(fileMessage)
+
+        val inputStream = ByteArrayInputStream(ByteArray(0))
+        val outputStream = ByteArrayOutputStream()
+        val errorStream = ByteArrayOutputStream()
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
+
+        Assertions.assertEquals(0, grepCommand.execute(listOf("a", file.pathString, "-A", "3"), ioEnvironment))
+        Assertions.assertEquals(
+            """
+                a
+                c
+                a
+                b
+                a
+                e
+                e
+                c
+            """.trimIndent(),
+            ioEnvironment.outputStream.toString()
+        )
+    }
+
+    @Test
+    fun parseTestAfterContextHard() {
+        val grepCommand = GrepCommand()
+        val fileMessage = """
+            b
+            a
+            c
+            a
+            b
+            d
+            e
+            e
+            a
+            z
+            f
+            a
+            b
+        """.trimIndent()
+        val file = kotlin.io.path.createTempFile()
+        file.writeText(fileMessage)
+
+        val inputStream = ByteArrayInputStream(ByteArray(0))
+        val outputStream = ByteArrayOutputStream()
+        val errorStream = ByteArrayOutputStream()
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
+
+        Assertions.assertEquals(0, grepCommand.execute(listOf("a", file.pathString, "-A", "3"), ioEnvironment))
+        Assertions.assertEquals(
+            """
+                a
+                c
+                a
+                b
+                d
+                e
+                a
+                z
+                f
+                a
+                b
+            """.trimIndent(),
+            ioEnvironment.outputStream.toString()
+        )
+    }
+
+    @Test
+    fun parseTestIgnoreWordReg() {
+        val grepCommand = GrepCommand()
+        val fileMessage = """
+            I'm on the highway to 6hell42
+            Highway to HeLl
+            I'm on the highway to HELL
+            Highway to hello
+            Don't stop me
+        """.trimIndent()
+        val file = kotlin.io.path.createTempFile()
+        file.writeText(fileMessage)
+
+        val inputStream = ByteArrayInputStream(ByteArray(0))
+        val outputStream = ByteArrayOutputStream()
+        val errorStream = ByteArrayOutputStream()
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
+
+        Assertions.assertEquals(0, grepCommand.execute(listOf("HELL", file.pathString, "-w", "-i"), ioEnvironment))
+        Assertions.assertEquals(
+            """
+            Highway to HeLl
+            I'm on the highway to HELL
+        """.trimIndent(),
+            ioEnvironment.outputStream.toString()
+        )
+    }
 }

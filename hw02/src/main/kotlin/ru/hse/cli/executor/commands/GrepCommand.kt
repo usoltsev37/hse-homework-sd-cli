@@ -4,10 +4,16 @@ import kotlinx.cli.*
 import org.apache.commons.io.IOUtils
 import ru.hse.cli.executor.IOEnvironment
 import java.io.File
+import java.lang.Integer.max
 import java.nio.charset.StandardCharsets
 import java.util.*
-import kotlin.collections.ArrayList
 
+/**
+ * Parser for arguments of the GrepCommand.
+ * @key [-w] (word-regexp) - search by whole words.
+ * @key [-i] (ignore-case) - case-insensitive search.
+ * @key [-A NUM] (after-context) - prints NUM strings after matched string.
+ */
 class GrepParser {
     val parser = ArgParser("")
     val needle by parser.argument(ArgType.String, description = "Needle")
@@ -35,11 +41,22 @@ class GrepParser {
 
     fun parse(args: List<String>) {
         parser.parse(args.toTypedArray())
-        return // обработать ошибку
+        return
     }
 }
 
+/**
+ * Represents the command [grep]
+ */
 class GrepCommand : AbstractCommand {
+
+    /**
+     * Execute grep command with arguments [args] and IO environment [ioEnvironment].
+     * Execution can be unsuccessful if at least one file doesn't exitst.
+     * @param args arguments to process.
+     * @param ioEnvironment stores output and error streams to print a result or error message during execution.
+     * @return 0 if execution was successful, -1 otherwise.
+     */
     override fun execute(args: List<String>, ioEnvironment: IOEnvironment): Int {
         val grepParser = GrepParser()
         grepParser.parse(args)
@@ -52,30 +69,71 @@ class GrepCommand : AbstractCommand {
             file.readLines()
         }
 
-        var matchResults: List<String>
-
-
-        if (grepParser.wordRegexp) {
-            needle = "\\b${grepParser.needle}\\b".toRegex()
-        }
+        var matchResults: MutableList<String> = content.toMutableList()
 
         if (grepParser.ignoreCase) {
             needle = grepParser.needle.lowercase(Locale.getDefault()).toRegex()
-//            matchResults.addAll(content.filter {
-//                needle.find(it.lowercase(Locale.getDefault())) != null
-//            })
+            matchResults = content.filter {
+                needle.find(it.lowercase(Locale.getDefault())) != null
+            }.toMutableList()
+        }
+
+        if (!grepParser.ignoreCase && !grepParser.wordRegexp) {
+            matchResults = matchResults.filter {
+                needle.find(it) != null
+            }.toMutableList()
+        }
+
+        if (grepParser.wordRegexp) {
+            print(needle.pattern)
+            needle = "\\b${needle.pattern}\\b".toRegex()
+            matchResults = matchResults.filter {
+                needle.find(if (grepParser.ignoreCase) it.lowercase(Locale.getDefault()) else it) != null
+            }.toMutableList()
         }
 
         if (grepParser.afterContext != 0) {
+            var matchedIndex = 0
+            val segments: MutableList<Pair<Int, Int>> = mutableListOf()
 
-        }
+            for (i in content.indices) {
+                if (content[i] == matchResults[matchedIndex]) {
+                    segments.add(Pair(i, i + grepParser.afterContext))
+                    matchedIndex++
+                }
 
-        matchResults = content.filter {
-            needle.find(it) != null
+                if (matchedIndex == matchResults.size)
+                    break
+            }
+
+            val processedIndex = processSegments(segments)
+            print(processedIndex)
+            matchResults = content.filterIndexed {index, str -> index in processedIndex}.toMutableList()
         }
 
         ioEnvironment.outputStream.write(matchResults.joinToString("\n").toByteArray())
 
         return 0
+    }
+
+    private fun processSegments(segments: MutableList<Pair<Int, Int>>): List<Int> {
+        val matchResults = mutableListOf<Int>()
+        var currentRightBorder = -1
+        for (i in segments.indices) {
+            val segment = segments[i]
+
+            if (segment.first > currentRightBorder) {
+                for (ind in segment.first..segment.second)
+                    matchResults.add(ind)
+            } else {
+                for (ind in segment.first .. max(currentRightBorder, segment.second)) {
+                    matchResults.add(ind)
+                }
+            }
+
+            currentRightBorder = max(currentRightBorder, segment.second)
+        }
+
+        return matchResults
     }
 }
