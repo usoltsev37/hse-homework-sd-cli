@@ -60,30 +60,4 @@ internal class GrepParserTest {
         assertEquals("needle", grepParser.needle)
         grepParser.inputFile?.let { assertTrue(it.isEmpty()) }
     }
-
-    @Test
-    fun parseTestIgnore() {
-        val grepCommand = GrepCommand()
-        val fileMessage = "I'm on the highway to hell\n" +
-                "On the needle highway to hell\n" +
-                "Highway to hell\n" +
-                "I'm on the highway to hell nEEdlE"
-        val file = kotlin.io.path.createTempFile()
-        file.writeText(fileMessage)
-        val grepParser = GrepParser()
-        grepParser.parse(listOf("Needle", "-i"))
-        assertTrue(grepParser.ignoreCase)
-
-        val inputStream = ByteArrayInputStream(ByteArray(0))
-        val outputStream = ByteArrayOutputStream()
-        val errorStream = ByteArrayOutputStream()
-        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
-
-        Assertions.assertEquals(0, grepCommand.execute(listOf("Needle", file.pathString, "-i"), ioEnvironment))
-        Assertions.assertEquals(
-            "On the needle highway to hell\n" +
-                    "I'm on the highway to hell nEEdlE",
-            ioEnvironment.outputStream.toString()
-        )
-    }
 }

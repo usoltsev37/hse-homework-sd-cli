@@ -6,6 +6,7 @@ import ru.hse.cli.executor.IOEnvironment
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.util.*
+import kotlin.collections.ArrayList
 
 class GrepParser {
     val parser = ArgParser("")
@@ -53,14 +54,16 @@ class GrepCommand : AbstractCommand {
 
         var matchResults: List<String>
 
-        if (grepParser.ignoreCase) { // test ”МинИмаЛьный”
-            matchResults = content.filter {
-                needle.find(it.lowercase(Locale.getDefault())) != null
-            }
-        }
 
         if (grepParser.wordRegexp) {
             needle = "\\b${grepParser.needle}\\b".toRegex()
+        }
+
+        if (grepParser.ignoreCase) {
+            needle = grepParser.needle.lowercase(Locale.getDefault()).toRegex()
+//            matchResults.addAll(content.filter {
+//                needle.find(it.lowercase(Locale.getDefault())) != null
+//            })
         }
 
         if (grepParser.afterContext != 0) {
