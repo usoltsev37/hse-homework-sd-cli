@@ -5,6 +5,7 @@ import ru.hse.cli.executor.IOEnvironment
 import java.io.File
 import java.io.IOException
 import java.nio.charset.Charset
+import java.lang.Integer.max
 import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.io.path.createTempFile
@@ -40,7 +41,7 @@ class WcCommand : AbstractCommand {
                 continue
             }
 
-            val result = processFile(file, ioEnvironment)
+            val result = processFile(file.readLines(), ioEnvironment)
 
             if (result == -1) {
                 return -1
@@ -49,20 +50,17 @@ class WcCommand : AbstractCommand {
 
         val content = IOUtils.toString(ioEnvironment.inputStream, StandardCharsets.UTF_8)
         if (content.isNotEmpty() || (content.isEmpty() && args.isEmpty())) {
-            val inputArg = content
-            val tempFile = createTempFile()
-            tempFile.writeText(inputArg)
-
-            return processFile(tempFile.toFile(), ioEnvironment)
+            return processFile(if (content.isEmpty()) emptyList() else content.split("\n"), ioEnvironment)
         }
 
         return 0
     }
 
-    private fun processFile(file: File, ioEnvironment: IOEnvironment): Int {
-        val cntLines = getCntLines(file)
-        val cntWords = getCntWords(file)
-        val cntBytes = file.length().toInt()
+    private fun processFile(fileLines: List<String>, ioEnvironment: IOEnvironment): Int {
+        val cntLines = fileLines.size
+        val cntWords = fileLines.stream().mapToInt { if (it.isEmpty()) 0 else it.split("\\s+".toRegex()).size }.sum()
+        val cntBytes = fileLines.map { it.encodeToByteArray() }.stream().mapToInt(ByteArray::size).sum() +
+                max(0, cntLines - 1)
 
         try {
             val str = "$cntLines $cntWords $cntBytes"
@@ -78,23 +76,5 @@ class WcCommand : AbstractCommand {
         fun stringToIntArray(s: String): IntArray {
             return s.split(" ").map { t -> t.toInt() }.toIntArray()
         }
-    }
-
-    private fun getCntLines(file: File): Int {
-        var cntLines = 0
-        file.forEachLine {
-            cntLines++
-        }
-        return cntLines
-    }
-
-    private fun getCntWords(file: File): Int {
-        val scan = Scanner(file.inputStream())
-        var cntWords = 0
-        while (scan.hasNext()) {
-            scan.next()
-            cntWords++
-        }
-        return cntWords
     }
 }

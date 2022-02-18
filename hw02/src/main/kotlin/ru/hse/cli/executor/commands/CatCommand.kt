@@ -42,7 +42,7 @@ class CatCommand : AbstractCommand {
         var result = 0
         if (args.isEmpty()) {
             val body = ioEnvironment.inputStream.toString()
-//            bodyWrite(body)
+            bodyWrite(body, ioEnvironment)
         } else {
             ioEnvironment.inputStream.reset()
             result = if (forEachWrite(args, ioEnvironment) == -1) -1 else result

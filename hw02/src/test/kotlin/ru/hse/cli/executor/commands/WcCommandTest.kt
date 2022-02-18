@@ -33,4 +33,19 @@ internal class WcCommandTest: BaseExecutorTest() {
     fun stringToIntArrayCorrect() {
         Assertions.assertEquals(listOf(12, 432, 10000), WcCommand.stringToIntArray("12 432 10000").toList())
     }
+
+    @Test
+    fun executeEmptyInput() {
+        val wcCommand = WcCommand()
+        val inputStream = ByteArrayInputStream(ByteArray(0))
+        val outputStream = ByteArrayOutputStream()
+        val errorStream = ByteArrayOutputStream()
+        val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
+
+        Assertions.assertEquals(0, wcCommand.execute(emptyList(), ioEnvironment))
+        Assertions.assertEquals(
+            listOf(0, 0, 0),
+            WcCommand.stringToIntArray(ioEnvironment.outputStream.toString()).asList()
+        )
+    }
 }
