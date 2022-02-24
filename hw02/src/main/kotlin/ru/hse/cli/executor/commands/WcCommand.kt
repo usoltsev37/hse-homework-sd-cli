@@ -30,16 +30,6 @@ class WcCommand : AbstractCommand {
         }
 
         return if (forEachExecute(args, ioEnvironment) == -1) -1 else 0
-
-//        var result = 0
-//        if (args.isEmpty()) {
-//            val data = ioEnvironment.inputStream.toString().split(" ")
-//            result = if (forEachExecute(data, ioEnvironment) == -1) -1 else result
-//        } else {
-//            result = if (forEachExecute(args, ioEnvironment) == -1) -1 else result
-//        }
-//
-//        return result
     }
 
     private fun forEachExecute(args: List<String>, ioEnvironment: IOEnvironment): Int {
@@ -69,7 +59,7 @@ class WcCommand : AbstractCommand {
         val cntLines = fileLines.size
         val cntWords = fileLines.stream().mapToInt { if (it.isEmpty()) 0 else it.split("\\s+".toRegex()).size }.sum()
         val cntBytes = fileLines.map { it.encodeToByteArray() }.stream().mapToInt(ByteArray::size).sum() +
-                max(0, cntLines - 1) // file.length().toInt()
+                max(0, cntLines - 1)
 
         try {
             val str = "$cntLines $cntWords $cntBytes"
@@ -85,15 +75,5 @@ class WcCommand : AbstractCommand {
         fun stringToIntArray(s: String): IntArray {
             return s.split(" ").map { t -> t.toInt() }.toIntArray()
         }
-    }
-
-    private fun getCntWords(file: File): Int {
-        val scan = Scanner(file.inputStream())
-        var cntWords = 0
-        while (scan.hasNext()) {
-            scan.next()
-            cntWords++
-        }
-        return cntWords
     }
 }
