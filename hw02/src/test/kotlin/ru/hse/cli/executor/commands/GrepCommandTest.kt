@@ -8,8 +8,6 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import kotlin.io.path.pathString
 import kotlin.io.path.writeText
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 internal class GrepCommandTest : BaseExecutorTest() {
     @Test
