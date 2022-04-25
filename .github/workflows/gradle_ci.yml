@@ -1,0 +1,25 @@
+name: Gradle CI
+
+on: push
+
+jobs:
+  gradle:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./hw02
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: zulu
+          java-version: 11
+            
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+   
+      - name: Build and test
+        run: ./gradlew build
