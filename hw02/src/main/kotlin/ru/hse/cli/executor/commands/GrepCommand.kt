@@ -1,6 +1,12 @@
 package ru.hse.cli.executor.commands
 
-import kotlinx.cli.*
+import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.arguments.optional
+import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.flag
+import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.types.int
 import org.apache.commons.io.IOUtils
 import ru.hse.cli.executor.IOEnvironment
 import java.io.File
@@ -9,7 +15,7 @@ import java.nio.charset.StandardCharsets
 import java.util.*
 
 /**
- * Represents the command [grep]
+ * Represents the command grep
  */
 class GrepCommand : AbstractCommand {
 
@@ -19,38 +25,32 @@ class GrepCommand : AbstractCommand {
      * @key [-i] (ignore-case) - case-insensitive search.
      * @key [-A NUM] (after-context) - prints NUM strings after matched string.
      */
-    class GrepParser {
-        val parser = ArgParser("")
-        val needle by parser.argument(ArgType.String, description = "Needle")
-        val inputFile by parser.argument(ArgType.String, description = "Input file").optional()
-        val wordRegexp by parser.option(
-            ArgType.Boolean,
-            fullName = "word-regexp",
-            shortName = "w",
-            description = "Search by whole words"
-        ).default(false)
+    class GrepParser : CliktCommand() {
+        val needle by argument()
+        val inputFile by argument().optional()
+        val ignoreCase by option(
+            names = arrayOf(
+                "-i",
+                "--ignore-case"
+            ),
+            help = "Case-insensitive search"
+        ).flag()
+        val wordRegexp by option(
+            names = arrayOf(
+                "-w",
+                "--word-regexp"
+            ),
+            help = "Search by whole words"
+        ).flag()
+        val afterContext by option(
+            names = arrayOf(
+                "-A",
+                "--after-context"
+            ),
+            help = "The number of lines after match which should be printed. Every line will be printed at most one time"
+        ).int().default(0)
 
-        val ignoreCase by parser.option(
-            ArgType.Boolean,
-            fullName = "ignore-case",
-            shortName = "i",
-            description = "Case-insensitive search"
-        ).default(false)
-
-        val afterContext by parser.option(
-            ArgType.Int,
-            fullName = "after-context",
-            shortName = "A",
-            description = "The number of lines after match which should be printed. Every line will be printed at most one time"
-        ).default(0)
-
-        fun parse(args: List<String>) {
-            parser.parse(args.toTypedArray()).apply {
-                require(afterContext >= 0) {
-                    "grep: ${afterContext}: wrong argument of context length."
-                }
-            }
-        }
+        override fun run() = Unit
     }
 
     /**
@@ -61,8 +61,12 @@ class GrepCommand : AbstractCommand {
      * @return 0 if execution was successful, -1 otherwise.
      */
     override fun execute(args: List<String>, ioEnvironment: IOEnvironment): Int {
-        val grepParser = GrepParser()
-        grepParser.parse(args)
+        val grepParser = GrepParser().apply { parse(args) }
+        with(grepParser) {
+            require(afterContext >= 0) {
+                "grep: ${afterContext}: wrong argument of context length."
+            }
+        }
 
         var needle = grepParser.needle.toRegex()
         val content: List<String> = if (grepParser.inputFile == null) {
@@ -108,7 +112,7 @@ class GrepCommand : AbstractCommand {
         }
 
         val processedIndex = processSegments(segments)
-        matchResults = content.filterIndexed { index, str -> index in processedIndex }.toMutableList()
+        matchResults = content.filterIndexed { index, _ -> index in processedIndex }.toMutableList()
 
         ioEnvironment.outputStream.write(matchResults.joinToString("\n").toByteArray())
 
