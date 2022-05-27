@@ -1,5 +1,6 @@
 package ru.hse.cli
 
+import com.github.ajalt.clikt.core.NoSuchOption
 import ru.hse.cli.exception.LexerException
 import ru.hse.cli.exception.ParserException
 import ru.hse.cli.exception.UnknownCommandException
@@ -10,7 +11,6 @@ import ru.hse.cli.parser.Parser
 import ru.hse.cli.parser.impl.ParserImpl
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.IOException
 
 fun main() {
     while (!Environment.isShutdowned) {
@@ -42,6 +42,10 @@ fun main() {
         } catch (e: LexerException) {
             println(e.message)
         } catch (e: ParserException) {
+            println(e.message)
+        } catch (e: NoSuchOption) {
+            println(e.message)
+        } catch (e: IllegalArgumentException) {
             println(e.message)
         }
     }

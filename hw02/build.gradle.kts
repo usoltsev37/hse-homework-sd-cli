@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("com.github.ajalt.clikt:clikt:3.4.2")
     implementation("commons-io:commons-io:2.6")
 }
 
@@ -110,7 +111,7 @@ gradle.buildFinished {
 
 fun printResults(allResults: List<TestOutcome>) {
     val maxLength = allResults.map { it.maxWidth() }
-        .max() ?: 0
+        .maxOrNull() ?: 0
 
     println("┌${"─".repeat(maxLength)}┐")
 
@@ -129,6 +130,6 @@ data class TestOutcome(val lines: MutableList<String> = mutableListOf()) {
     }
 
     fun maxWidth(): Int {
-        return lines.maxBy { it.length }?.length ?: 0
+        return lines.maxByOrNull { it.length }?.length ?: 0
     }
 }

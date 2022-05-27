@@ -12,7 +12,8 @@ object CommandStorage {
         "exit" to ExitCommand(),
         "cat" to CatCommand(),
         "pwd" to PwdCommand(),
-        "assignment" to AssignmentCommand()
+        "assignment" to AssignmentCommand(),
+        "grep" to GrepCommand()
     )
 
     /**
