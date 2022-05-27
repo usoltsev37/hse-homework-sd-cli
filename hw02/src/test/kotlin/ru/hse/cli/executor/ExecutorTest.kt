@@ -83,4 +83,16 @@ internal class ExecutorTest: BaseExecutorTest() {
 
         assertEquals("0 0 0", ioEnvironment.outputStream.toString())
     }
+
+    @Test
+    fun executeEchoPipeCat() {
+        val ioEnvironment =
+            IOEnvironment(ByteArrayInputStream(ByteArray(0)), ByteArrayOutputStream(), ByteArrayOutputStream())
+        val executor = Executor(listOf(Command("echo", listOf("123")),
+            Command("cat", emptyList())), ioEnvironment)
+
+        executor.execute()
+
+        assertEquals("123", ioEnvironment.outputStream.toString())
+    }
 }
