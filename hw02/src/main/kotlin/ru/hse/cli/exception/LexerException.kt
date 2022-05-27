@@ -1,4 +1,8 @@
 package ru.hse.cli.exception
 
-class LexerException(val name: String): Exception()
+/**
+ * Exception will be thrown if Lexer fails to produce the next token
+ * @param name exception message
+ */
+class LexerException(name: String): Exception(name)
 

@@ -1,4 +1,8 @@
 package ru.hse.cli.exception
 
-class ParserException(val name: String): Exception()
+/**
+ * Exception will be thrown if Parser fails to parse current token
+ * @param name exception message
+ */
+class ParserException(name: String): Exception(name)
 

@@ -38,11 +38,11 @@ fun main() {
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         } catch (e: UnknownCommandException) {
-            println("Unknown command: ${e.name}")
+            println("Unknown command: ${e.message}")
         } catch (e: LexerException) {
-            println(e.name)
+            println(e.message)
         } catch (e: ParserException) {
-            println(e.name)
+            println(e.message)
         } catch (e: NoSuchOption) {
             println(e.message)
         } catch (e: IllegalArgumentException) {
