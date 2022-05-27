@@ -67,5 +67,5 @@
 ## Диаграмма Классов
 
 <p align="center">
-  <img src="ArchitectureCLI.png" width="1000" title="screen_authorization">
+  <img src="ArchitectureCLI.svg" width="1000" title="screen_authorization">
 </p>
