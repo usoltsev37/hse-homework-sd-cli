@@ -7,7 +7,7 @@ import ru.hse.cli.executor.commands.CatCommand
 import ru.hse.cli.executor.commands.ExternalCommand
 import kotlin.test.assertFailsWith
 
-internal class CommandStorageTest {
+internal class CommandStorageTest: BaseExecutorTest() {
 
     @Test
     fun getCommand() {

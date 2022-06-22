@@ -2,13 +2,14 @@ package ru.hse.cli.executor.commands
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import ru.hse.cli.executor.BaseExecutorTest
 import ru.hse.cli.executor.IOEnvironment
 import java.io.ByteArrayOutputStream
 import java.io.ByteArrayInputStream
 import kotlin.io.path.pathString
 import kotlin.io.path.writeText
 
-internal class WcCommandTest {
+internal class WcCommandTest: BaseExecutorTest() {
     @Test
     fun executeFile() {
         val wcCommand = WcCommand()

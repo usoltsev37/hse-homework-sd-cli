@@ -3,17 +3,18 @@ package ru.hse.cli.executor.commands
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ru.hse.cli.Environment
+import ru.hse.cli.executor.BaseExecutorTest
 import ru.hse.cli.executor.IOEnvironment
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.*
 
-internal class ExitCommandTest {
+internal class ExitCommandTest: BaseExecutorTest() {
 
     @Test
     fun executeCorrect() {
         val exitCommand = ExitCommand()
-        val ioEnvironment = IOEnvironment(ByteArrayInputStream(ByteArray(1)), ByteArrayOutputStream(), ByteArrayOutputStream())
+        val ioEnvironment = IOEnvironment(ByteArrayInputStream(ByteArray(0)), ByteArrayOutputStream(), ByteArrayOutputStream())
 
         Assertions.assertFalse(Environment.isShutdowned)
         Assertions.assertEquals(0, exitCommand.execute(Arrays.asList(), ioEnvironment))

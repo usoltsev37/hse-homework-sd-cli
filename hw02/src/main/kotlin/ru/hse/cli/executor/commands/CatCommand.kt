@@ -4,6 +4,8 @@ import org.apache.commons.io.IOUtils
 import ru.hse.cli.executor.IOEnvironment
 import java.io.File
 import java.io.FileNotFoundException
+import kotlin.io.path.readBytes
+import kotlin.io.path.writeText
 import java.nio.charset.StandardCharsets
 
 /**

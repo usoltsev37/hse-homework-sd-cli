@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils
 import ru.hse.cli.executor.IOEnvironment
 import java.io.File
 import java.io.IOException
+import java.nio.charset.Charset
 import java.lang.Integer.max
 import java.nio.charset.StandardCharsets
 import java.util.*

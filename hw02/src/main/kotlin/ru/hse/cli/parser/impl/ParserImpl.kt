@@ -1,5 +1,6 @@
 package ru.hse.cli.parser.impl
 
+import ru.hse.cli.exception.ParserException
 import ru.hse.cli.parser.util.Command
 import ru.hse.cli.parser.Parser
 import ru.hse.cli.parser.util.Token
@@ -10,7 +11,7 @@ import java.lang.IllegalStateException
  * Simple recursive descent parser that builds [Command] representation during parsing
  * @see [Command]
  */
-class ParserImpl(input: String): Parser {
+class ParserImpl(input: String) : Parser {
 
     private val lexer: LexerImpl = LexerImpl(input)
 
@@ -19,10 +20,16 @@ class ParserImpl(input: String): Parser {
     private var lastPos: Int = 0
 
     private val errorMessage
-       get() = "Parser Error: position ${lexer.pos}"
+        get() = "Parser Error: position ${lexer.pos}"
 
-    override fun parse(): Command {
-        return parseCommand()
+    override fun parse(): List<Command> {
+        val result = ArrayList<Command>()
+        result.add(parseCommand())
+        while (accept(Token.TK_PIPE)) {
+            accept(Token.TK_SPACE)
+            result.add(parseCommand())
+        }
+        return result
     }
 
     private fun parseCommand(): Command {
@@ -31,6 +38,7 @@ class ParserImpl(input: String): Parser {
         val lastCurToken = curToken
 
         val res = parseAssignment()
+        accept(Token.TK_SPACE)
         if (res != null) {
             return res
         }
@@ -67,9 +75,11 @@ class ParserImpl(input: String): Parser {
 
     private fun parseArgs(): List<String> {
         val result = ArrayList<String>()
-        result.add(parseString())
-        while (!lexer.isExhausted() && accept(Token.TK_SPACE)) {
+        if (curToken != Token.TK_PIPE) {
             result.add(parseString())
+            while (!lexer.isExhausted() && accept(Token.TK_SPACE) && curToken != Token.TK_PIPE) {
+                result.add(parseString())
+            }
         }
         return result
     }
@@ -82,7 +92,12 @@ class ParserImpl(input: String): Parser {
         if (accept(Token.TK_STR)) {
             return value
         }
-        throw IllegalStateException(errorMessage)
+        throw ParserException(
+            """
+            Parser Error: cannot parse $value
+            Position: $lastPos
+            """.trimIndent()
+        )
     }
 
     private fun accept(tok: Token): Boolean {

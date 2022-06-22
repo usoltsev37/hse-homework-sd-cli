@@ -3,15 +3,16 @@ package ru.hse.cli.executor.commands
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import ru.hse.cli.executor.BaseExecutorTest
 import ru.hse.cli.executor.IOEnvironment
 import java.io.*
 
-internal class PwdCommandTest {
+internal class PwdCommandTest: BaseExecutorTest() {
 
     @Test
     fun testExecuteResult() {
         val pwdCommand = PwdCommand()
-        val inputStream = ByteArrayInputStream(ByteArray(1))
+        val inputStream = ByteArrayInputStream(ByteArray(0))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
         val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
@@ -22,7 +23,7 @@ internal class PwdCommandTest {
     fun testExecuteOutput() {
         val pwdCommand = PwdCommand()
         val expected = System.getProperty("user.dir")
-        val inputStream = ByteArrayInputStream(ByteArray(1))
+        val inputStream = ByteArrayInputStream(ByteArray(0))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
         val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)

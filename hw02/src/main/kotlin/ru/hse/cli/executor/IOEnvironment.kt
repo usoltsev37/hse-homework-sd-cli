@@ -1,7 +1,9 @@
 package ru.hse.cli.executor
 
+import org.apache.commons.io.IOUtils
 import java.io.InputStream
 import java.io.OutputStream
+import java.nio.charset.StandardCharsets
 
 /**
  * Stores streams for an interaction between a command and IO.
@@ -9,7 +11,7 @@ import java.io.OutputStream
  * @param outputStream stores a correct output.
  * @param errorStream stores errors occurred during execution.
  */
-class IOEnvironment constructor(val inputStream: InputStream, val outputStream: OutputStream, val errorStream: OutputStream) {
+class IOEnvironment constructor(var inputStream: InputStream, var outputStream: OutputStream, val errorStream: OutputStream) {
 
     /**
      * Prints a current state of streams.

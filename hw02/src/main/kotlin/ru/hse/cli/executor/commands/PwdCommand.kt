@@ -14,6 +14,7 @@ class PwdCommand: AbstractCommand {
      */
     override fun execute(args: List<String>, ioEnvironment: IOEnvironment): Int {
         val path = System.getProperty("user.dir")
+        ioEnvironment.inputStream.reset()
         ioEnvironment.outputStream.write(path.toByteArray())
 
         return 0

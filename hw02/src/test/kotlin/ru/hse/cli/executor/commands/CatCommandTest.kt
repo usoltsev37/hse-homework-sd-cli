@@ -3,6 +3,7 @@ package ru.hse.cli.executor.commands
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import ru.hse.cli.executor.BaseExecutorTest
 import ru.hse.cli.executor.IOEnvironment
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -10,7 +11,7 @@ import java.nio.file.Path
 import kotlin.io.path.pathString
 import kotlin.io.path.writeText
 
-internal class CatCommandTest {
+internal class CatCommandTest: BaseExecutorTest() {
 
     @Test
     fun executeCorrectOneFile() {
@@ -19,7 +20,7 @@ internal class CatCommandTest {
         val file = kotlin.io.path.createTempFile()
         file.writeText(message)
 
-        val inputStream = ByteArrayInputStream(ByteArray(1))
+        val inputStream = ByteArrayInputStream(ByteArray(0))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
         val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
@@ -41,7 +42,7 @@ internal class CatCommandTest {
             files[i].writeText(messages[i])
         }
 
-        val inputStream = ByteArrayInputStream(ByteArray(1))
+        val inputStream = ByteArrayInputStream(ByteArray(0))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
         val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
@@ -56,7 +57,7 @@ internal class CatCommandTest {
     @Test
     fun executeFailureFileNotExist() {
         val catCommand = CatCommand()
-        val inputStream = ByteArrayInputStream(ByteArray(1))
+        val inputStream = ByteArrayInputStream(ByteArray(0))
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
         val ioEnvironment = IOEnvironment(inputStream, outputStream, errorStream)
